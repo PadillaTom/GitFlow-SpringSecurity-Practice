@@ -43,7 +43,13 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/test").authenticated()
+                .antMatchers("/myAccount").hasAuthority("WRITE")
+                .antMatchers("/myBalance").hasAuthority("READ")
+                .antMatchers("/myLoans").hasAuthority("DELETE")
+                .antMatchers("/myCards").authenticated()
+                .antMatchers("/user").authenticated()
+                .antMatchers("/notices").permitAll()
+                .antMatchers("/contact").permitAll()
                 .and()
             .formLogin().and()
             .httpBasic();
