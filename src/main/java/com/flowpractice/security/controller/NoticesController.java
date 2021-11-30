@@ -18,6 +18,7 @@ public class NoticesController {
 	@GetMapping("/notices")
 	public List<Notice> getNotices() {
 		List<Notice> notices = noticeRepository.findAllActiveNotices();
+		System.out.println("---> Notices CONTROLLER: Notices LIST --->" +notices);
 		if (notices != null ) {
 			return notices;
 		}else {
