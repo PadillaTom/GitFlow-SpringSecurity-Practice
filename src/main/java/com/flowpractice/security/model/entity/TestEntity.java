@@ -16,4 +16,6 @@ public class TestEntity {
     private String email;
     private String password;
 
+    private String Role;
+
 }
