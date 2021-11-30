@@ -1,8 +1,8 @@
 package com.flowpractice.security.auth.service;
 
-import com.flowpractice.security.auth.model.SecurityUser;
-import com.flowpractice.security.model.entity.TestEntity;
-import com.flowpractice.security.repository.TestRepository;
+import com.flowpractice.security.auth.model.SecurityCustomer;
+import com.flowpractice.security.model.entity.Customer;
+import com.flowpractice.security.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,18 +15,18 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private TestRepository testRepository;
+    private CustomerRepository customerRepository;
 
     // === ACA: Otro metodo si necesitamos ===
     // Ejemplo: signupNewUser(UserDTO newUser){}
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<TestEntity> myList = testRepository.findByEmail(username);
+        List<Customer> myList = customerRepository.findByEmail(username);
         if(myList.isEmpty()){
             throw new UsernameNotFoundException("User Details NOT FOUND for username: " + username);
         }
-        return new SecurityUser(myList.get(0));
+        return new SecurityCustomer(myList.get(0));
     }
 
 }

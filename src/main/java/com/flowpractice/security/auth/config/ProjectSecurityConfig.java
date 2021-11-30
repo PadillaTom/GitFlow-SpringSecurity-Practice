@@ -9,8 +9,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 @Configuration
 public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -41,9 +46,29 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .cors().configurationSource(new CorsConfigurationSource() {
+                @Override
+                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                    CorsConfiguration myConfig = new CorsConfiguration();
+                    myConfig.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                    myConfig.setAllowedMethods(Collections.singletonList("*"));
+                    myConfig.setAllowCredentials(true);
+                    myConfig.setAllowedHeaders(Collections.singletonList("*"));
+                    myConfig.setMaxAge(3600L);
+                    return myConfig;
+                }
+            })
+            .and()
+                .csrf().disable()
             .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/test").authenticated()
+                .antMatchers("/myAccount").hasAuthority("WRITE")
+                .antMatchers("/myBalance").hasAuthority("READ")
+                .antMatchers("/myLoans").hasAuthority("DELETE")
+                .antMatchers("/myCards").authenticated()
+                .antMatchers("/user").authenticated()
+                .antMatchers("/notices").permitAll()
+                .antMatchers("/contact").permitAll()
                 .and()
             .formLogin().and()
             .httpBasic();
