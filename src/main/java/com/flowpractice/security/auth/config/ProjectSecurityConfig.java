@@ -39,7 +39,7 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     // === Custom UserDetailsService ===
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(customServ);
+        auth.userDetailsService(customServ).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     // === Main Config ===
@@ -62,16 +62,14 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
             .authorizeRequests()
-                .antMatchers("/auth/*").permitAll()
                 .antMatchers("/myAccount").hasRole("USER")
-                .antMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/myBalance").hasAnyRole("USER","ADMIN")
                 .antMatchers("/myLoans").hasRole("ROOT")
                 .antMatchers("/myCards").authenticated()
                 .antMatchers("/user").authenticated()
                 .antMatchers("/notices").permitAll()
-                .antMatchers("/contact").permitAll()
-                .and()
-            .httpBasic();
+                .antMatchers("/contact").permitAll().and().httpBasic();
+
     }
 
 }
