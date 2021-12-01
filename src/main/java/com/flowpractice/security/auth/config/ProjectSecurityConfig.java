@@ -71,7 +71,6 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/contact").permitAll()
                 .and()
                 .httpBasic();
-
     }
 
 }
