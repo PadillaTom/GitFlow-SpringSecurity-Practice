@@ -68,7 +68,9 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/myCards").authenticated()
                 .antMatchers("/user").authenticated()
                 .antMatchers("/notices").permitAll()
-                .antMatchers("/contact").permitAll().and().httpBasic();
+                .antMatchers("/contact").permitAll()
+                .and()
+                .httpBasic();
 
     }
 
