@@ -29,7 +29,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) {
         String username = authentication.getName();
         String pwd = authentication.getCredentials().toString();
+
         List<Customer> customer = customerRepository.findByEmail(username);
+        System.out.println(customer);
         if (customer.size() > 0) {
             if (passwordEncoder.matches(pwd, customer.get(0).getPwd())) {
                 return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(customer.get(0).getAuthorities()));
