@@ -31,12 +31,15 @@ public class RequestValidationBeforeFilter implements Filter {
 		String header = req.getHeader(AUTHORIZATION);
 		if (header != null) {
 			header = header.trim();
+			System.out.println(" ===== HeaderTrimmed ->" + header);
 			if (StringUtils.startsWithIgnoreCase(header, AUTHENTICATION_SCHEME_BASIC)) {
 				byte[] base64Token = header.substring(6).getBytes(StandardCharsets.UTF_8);
 				byte[] decoded;
 				try {
-					decoded = Base64.getDecoder().decode(base64Token);
+					System.out.println("===== Base64Token ->" + base64Token);
+					decoded = Base64.getUrlDecoder().decode(base64Token);
 					String token = new String(decoded, getCredentialsCharset(req));
+					System.out.println("===== JWT -> " + token);
 					int delim = token.indexOf(":");
 					if (delim == -1) {
 						throw new BadCredentialsException("Invalid basic authentication token");
